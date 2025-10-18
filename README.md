@@ -109,5 +109,6 @@ Voir le fichier [LICENSE](./LICENSE) pour plus d’informations.
 ### 💡 Crédits
 
 Créé par **Sterve** — Entrepreneur digital et concepteur d’agents IA.  
-📬 Contact : [Telegram](https://t.me/) | [GitHub](https://github.com/sterve9)  
+📬 Contact : [Telegram](https://t.me/SterveShop) | [GitHub](https://github.com/sterve9)
+
 🧠 Propulsé par **n8n**, **IA**, et la passion pour l’innovation agricole.
