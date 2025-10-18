@@ -13,13 +13,6 @@
 Il combine la puissance de **n8n**, **Telegram**, **Google Sheets** et **Open-Meteo API** pour fournir des rapports quotidiens, des recommandations météorologiques et des analyses précises sur les activités agricoles.
 
 Ce projet s’inscrit dans la vision de **l’agriculture intelligente en Afrique**, où l’automatisation et l’intelligence artificielle deviennent des leviers de productivité et de durabilité.
-## 🧩 Aperçu visuel du workflow n8n
-
-![Aperçu du workflow n8n](docs/workflow-overview.png?v=2)
-
-
-> Ce diagramme montre la structure complète du bot n8n Agro Telegram.
-
 
  
 
