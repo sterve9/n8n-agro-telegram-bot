@@ -1,0 +1,1096 @@
+{
+  "name": "Assistant IA Agronome Telegram",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "5742c65a-b01b-4060-a748-ce1d9a70b1ee",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1744,
+        144
+      ],
+      "webhookId": "5e918a60-64c8-4659-9142-36f1a808f11d",
+      "credentials": {
+        "telegramApi": {
+          "id": "gHIK7rtT6xc59mR4",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "chatId",
+              "value": "={{ $json.chatId }}"
+            },
+            {
+              "name": "message",
+              "value": "={{ $json.message }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d994dd14-f74a-43b6-a187-eb98a98fc57f",
+      "name": "Préparer données",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        1360,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.chat.id }}",
+        "text": "=👋 Bonjour {{ $json.message.from.first_name }} ,  ✅ J’ai bien reçu votre message : * {{ $json.message.text }}*  ⏳ Traitement en cours...",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "864b959d-eb91-4c7a-bdbd-c78f2b84feb8",
+      "name": "Confirmation Bot",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        -1520,
+        144
+      ],
+      "webhookId": "6801ef14-0833-4aac-acfe-979cbc365d1f",
+      "credentials": {
+        "telegramApi": {
+          "id": "gHIK7rtT6xc59mR4",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "text": "🧑‍🌾 *Assistant Agricol IA – Centre d’aide*  \n\nVoici les commandes actuellement disponibles :\n\n🔹 `/meteo` → Météo du jour avec analyse ☀️🌧️  \n🔹 `/rapport` → Rapport détaillé des activités de la veille 📊  \n🔹 `/recommandation` → Conseils météo intelligents et interventions suggérées 🤖  \n🔹 `/aide` → Affiche ce menu d’aide 📘  \n\n🚧 *Fonctionnalité à venir très bientôt* :  \nTu pourras bientôt poser librement des questions à l’ingénieur IA  \n(ex : “Quand fertiliser les citronniers ?” 🍋)  \n🔧 *Nous y travaillons activement… reste connecté !* 🚀\n",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "a1898051-3c62-4c8a-88ca-10b8225b2344",
+      "name": "Message Aide",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        -224,
+        384
+      ],
+      "webhookId": "f0a18c2c-7f4a-4eb5-ad01-5ca91f8bb1a9",
+      "credentials": {
+        "telegramApi": {
+          "id": "gHIK7rtT6xc59mR4",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "text": "❌ Commande non reconnue.\n\nTape `/aide` pour voir les options disponibles.",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "8a89cd23-7e9b-427e-aa7d-58ba5f63b25b",
+      "name": "Message Fallback",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        -512,
+        480
+      ],
+      "webhookId": "0a45f042-829b-4bca-bfa2-9c31155fe0f0",
+      "credentials": {
+        "telegramApi": {
+          "id": "gHIK7rtT6xc59mR4",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Telegram Trigger').item.json.message.text }}",
+                    "rightValue": "meteo",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "a74b41af-a92b-4efe-b1ef-30865511fac5"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "meteo"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "02439365-763b-48e2-bda5-740aba161d35",
+                    "leftValue": "={{ $('Telegram Trigger').item.json.message.text }}",
+                    "rightValue": "rapport",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "rapport"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "9a46fc6f-c28f-4e3b-b88b-31fb5247d4d8",
+                    "leftValue": "={{ $('Telegram Trigger').item.json.message.text }}",
+                    "rightValue": "recommandation",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "recommandation"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f4650f6b-0403-4f30-91f9-8703bafdfd44",
+                    "leftValue": "={{ $('Telegram Trigger').item.json.message.text }}",
+                    "rightValue": "aide",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "aide"
+            }
+          ]
+        },
+        "looseTypeValidation": true,
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -1344,
+        96
+      ],
+      "id": "f03fa4f6-59bd-4af5-960c-5f46cffb46e9",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2d0dea5d-93c2-40de-8395-83a3c12a96c0",
+              "name": "date",
+              "value": "={{ $json[\"daily\"][\"time\"][0] }}\n",
+              "type": "string"
+            },
+            {
+              "id": "507f70c7-b577-4064-bdf5-9dfa7091e2f3",
+              "name": "temp_max",
+              "value": "={{ $json[\"daily\"][\"temperature_2m_max\"][0] }}°C",
+              "type": "string"
+            },
+            {
+              "id": "67096fb2-8624-4d6a-88cd-afb3a4b64b87",
+              "name": "temp_min",
+              "value": "={{ $json[\"daily\"][\"temperature_2m_min\"][0] }}°C",
+              "type": "string"
+            },
+            {
+              "id": "ae14b601-9ef8-4c44-acd5-cde8fa42bae2",
+              "name": "pluie",
+              "value": "={{ $json[\"daily\"][\"precipitation_sum\"][0] }} mm",
+              "type": "string"
+            },
+            {
+              "id": "a897a54f-26c3-4333-b99b-b964e1e4913c",
+              "name": "vent",
+              "value": "={{ $json[\"daily\"][\"wind_speed_10m_max\"][0] }} km/h",
+              "type": "string"
+            },
+            {
+              "id": "4ee07abf-a874-4df5-af8a-3667ff8a5ef5",
+              "name": "meteo",
+              "value": "=🌡️ Temp max : {{ $json[\"daily\"][\"temperature_2m_max\"][0] }}°C 🌡️ Temp min : {{ $json[\"daily\"][\"temperature_2m_min\"][0] }}°C 🌧️ Pluie : {{ $json[\"daily\"][\"precipitation_sum\"][0] }} mm 💨 Vent : {{ $json[\"daily\"][\"wind_speed_10m_max\"][0] }} km/h",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        432,
+        -256
+      ],
+      "id": "918f1476-d281-4b07-a38e-45dabae5ef62",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}\n",
+        "text": "=🌦️ Météo du jour :\n🌡️ Max : {{$json[\"temp_max\"]}}\n🌡️ Min : {{$json[\"temp_min\"]}}\n🌧️ Pluie : {{$json[\"pluie\"]}}\n💨 Vent : {{$json[\"vent\"]}}\n",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        688,
+        -256
+      ],
+      "id": "38e31ac1-6e65-4ff7-9f16-e0f8a3aa7b40",
+      "name": "Envoyer météo",
+      "webhookId": "157a9d68-5067-4533-9ef1-a7d70f3bf98c",
+      "credentials": {
+        "telegramApi": {
+          "id": "gHIK7rtT6xc59mR4",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://api.open-meteo.com/v1/forecast?latitude=36.814848&longitude=10.190848&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max&timezone=auto",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        208,
+        -256
+      ],
+      "id": "efb815b5-e4c1-49b1-86ec-50e49d0946e4",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        496,
+        16
+      ],
+      "id": "f34bd295-f362-4877-bbae-3b3cf637b69e",
+      "name": "Fusion données rapport"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 💬 Données d'entrée (météo, interventions, etc.)\nconst data = items;\n\n// ✅ Obtenir le chat_id (ou valeur par défaut si absent)\nconst chatId = data.find(i => i.json.chat_id)?.json.chat_id || 7899716689;\n\n// 📅 Récupérer la date du rapport (supposée identique pour tous)\nconst date = data.find(i => i.json.date)?.json.date || \"Date inconnue\";\n\n// 🏡 Grouper les entrées par ferme\nconst fermeMap = {};\n\nfor (const item of data) {\n  const ferme = item.json.ferme || \"Ferme inconnue\";\n  const vanne = item.json.vanne || \"N/A\";\n  const intervention = item.json.intervention;\n  const pulverisation = item.json.pulvérisation;\n  const produit = item.json.produit || \"inconnu\";\n\n  if (!fermeMap[ferme]) {\n    fermeMap[ferme] = [];\n  }\n\n  if (intervention) {\n    fermeMap[ferme].push(`   ➤ ${intervention} (Vanne ${vanne})`);\n  }\n\n  if (pulverisation) {\n    fermeMap[ferme].push(`   ➤ ${pulverisation}\\n     - Produit : ${produit}\\n     - Vanne : ${vanne}`);\n  }\n}\n\n// 🧱 Construire le message proprement\nlet message = `📊 *Rapport d’exploitation — ${date}*\\n\\n`;\n\nfor (const [ferme, lignes] of Object.entries(fermeMap)) {\n  message += `🏡 *${ferme}*\\n${lignes.join(\"\\n\")}\\n\\n`;\n}\n\nmessage = message.trim(); // Nettoyage\n\n// ✅ Retourner le message final\nreturn [\n  {\n    json: {\n      chat_id: chatId,\n      message\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        16
+      ],
+      "id": "2c5335c2-611b-4556-b8ff-386983a79622",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Code in JavaScript').first().json.chat_id }}\n",
+        "text": "={{ $('Code in JavaScript').first().json.message }}\n",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        976,
+        16
+      ],
+      "id": "4a095f18-af40-4ebe-971b-d8e4e9742a21",
+      "name": "envoyer rapport",
+      "webhookId": "11fba3c7-55b9-4e17-94fc-68b329aaf40b",
+      "credentials": {
+        "telegramApi": {
+          "id": "gHIK7rtT6xc59mR4",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1GjjBMRhUky8OBMKjFyvdHJ3EVEgx_I0EyDi_GKz0E2I",
+          "mode": "list",
+          "cachedResultName": "Feuille interventions",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1GjjBMRhUky8OBMKjFyvdHJ3EVEgx_I0EyDi_GKz0E2I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1GjjBMRhUky8OBMKjFyvdHJ3EVEgx_I0EyDi_GKz0E2I/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        240,
+        -64
+      ],
+      "id": "f149b3c4-95ab-4eaf-9faf-d53363905ea4",
+      "name": "Feuille interventions",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "cWc9wdKpQ1eU6j8r",
+          "name": "google-agro"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const today = new Date();\ntoday.setDate(today.getDate() - 1); // hier\n\nconst yesterday = today.toISOString().split('T')[0]; // Format YYYY-MM-DD\n\nreturn items.filter(item => {\n  const date = item.json.date;\n  return date === yesterday;\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        0
+      ],
+      "id": "e259e1d5-980e-4256-bf61-08a39b3ce3c2",
+      "name": "fitrer par date"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1-JEcbURt6_fseuC0RO6bcoqGOXKxCfNpD1aSTt0q5ls",
+          "mode": "list",
+          "cachedResultName": "Feuille pulverisations",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1-JEcbURt6_fseuC0RO6bcoqGOXKxCfNpD1aSTt0q5ls/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1-JEcbURt6_fseuC0RO6bcoqGOXKxCfNpD1aSTt0q5ls/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        240,
+        112
+      ],
+      "id": "b75835e6-7729-44a4-849c-fb976f5d8a82",
+      "name": "Feuille pulverisations",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "cWc9wdKpQ1eU6j8r",
+          "name": "google-agro"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        240,
+        272
+      ],
+      "id": "de3cf05f-6427-43ab-a2c3-87c8c8dbe403",
+      "name": "Fusion données rapport1"
+    },
+    {
+      "parameters": {
+        "url": "https://api.open-meteo.com/v1/forecast?latitude=36.814848&longitude=10.190848&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max&timezone=auto",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -192,
+        224
+      ],
+      "id": "22a63bc1-e344-4a8d-a271-36fb6952e66c",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "date",
+              "value": "={{ $json[\"daily\"][\"time\"][0] }}",
+              "type": "string"
+            },
+            {
+              "name": "temp_max",
+              "value": "={{ $json[\"daily\"][\"temperature_2m_max\"][0] }}°C",
+              "type": "string"
+            },
+            {
+              "name": "temp_min",
+              "value": "={{ $json[\"daily\"][\"temperature_2m_min\"][0] }}°C",
+              "type": "string"
+            },
+            {
+              "name": "pluie",
+              "value": "={{ $json[\"daily\"][\"precipitation_sum\"][0] }} mm",
+              "type": "string"
+            },
+            {
+              "name": "vent",
+              "value": "={{ $json[\"daily\"][\"wind_speed_10m_max\"][0] }} km/h",
+              "type": "string"
+            },
+            {
+              "name": "meteo",
+              "value": "=🌡️ Temp max : {{ $json[\"daily\"][\"temperature_2m_max\"][0] }}°C 🌡️ Temp min : {{ $json[\"daily\"][\"temperature_2m_min\"][0] }}°C 🌧️ Pluie : {{ $json[\"daily\"][\"precipitation_sum\"][0] }} mm 💨 Vent : {{ $json[\"daily\"][\"wind_speed_10m_max\"][0] }} km/h",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        64,
+        240
+      ],
+      "id": "f7c54f37-2e80-466d-a50a-682ea9ed657e",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1-JEcbURt6_fseuC0RO6bcoqGOXKxCfNpD1aSTt0q5ls",
+          "mode": "list",
+          "cachedResultName": "Feuille pulverisations",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1-JEcbURt6_fseuC0RO6bcoqGOXKxCfNpD1aSTt0q5ls/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1-JEcbURt6_fseuC0RO6bcoqGOXKxCfNpD1aSTt0q5ls/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        688,
+        352
+      ],
+      "id": "234e7476-c989-4385-9e56-422f9bb8ec1c",
+      "name": "Feuille pulverisations1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "cWc9wdKpQ1eU6j8r",
+          "name": "google-agro"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        912,
+        288
+      ],
+      "id": "0a88d768-e51e-44f9-bfc1-2a9b1ef82296",
+      "name": "Fusion données rapport2"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ✅ Sécurité des données météo\nconst weather = $node[\"Edit Fields1\"]?.json || {};\n\n// 🔍 Recherche du chat_id dans tous les items disponibles\nconst chatId =\n  $items().find(i => i.json.chat_id)?.json.chat_id || 7899716689; // 🛑 Met ton ID Telegram ici en secours\n\n// 🌡️ Températures avec fallback\nconst tempMax = weather.temp_max ?? \"N/A\";\nconst tempMin = weather.temp_min ?? \"N/A\";\n\n// 💨🌧️ Données numériques avec fallback à 0\nconst vent = parseFloat(weather.vent?.replace(\" km/h\", \"\") || \"0\");\nconst pluie = parseFloat(weather.pluie?.replace(\" mm\", \"\") || \"0\");\nconst pluieDemain = parseFloat(weather.pluie_demain?.replace(\" mm\", \"\") || \"0\");\n\n// 🧠 Analyse météo intelligente\nlet meteoConseil = [];\n\nif (vent > 30) {\n  meteoConseil.push(`🚫 Évitez les pulvérisations aujourd’hui : vent trop fort (🌬️ ${vent} km/h).`);\n}\n\nif (pluieDemain > 10 && pluie < 5) {\n  meteoConseil.push(`🌧️ Pluie prévue demain (💧 ${pluieDemain} mm), pensez à pulvériser aujourd’hui.`);\n}\n\nif (pluie > 10) {\n  meteoConseil.push(`⚠️ Pluie aujourd’hui (💧 ${pluie} mm), évitez les engrais, risque de ruissellement.`);\n}\n\nif (meteoConseil.length === 0) {\n  meteoConseil.push(\"✅ Bonne fenêtre météo pour les interventions.\");\n}\n\n// 📌 Recommandations fixes\nconst recommandations = [\n  \"- Ne pas pulvériser aujourd’hui sur la même ferme que la veille.\",\n  \"- Injecter engrais 30 min après ouverture des vannes.\",\n  \"- Alterner les tâches lourdes (un seul tracteur disponible) pour éviter l'usure et la fatigue.\"\n];\n\n// 📌 Dosages standards\nconst dosages = [\n  \"- Azote (N) : 3 kg/ha\",\n  \"- Phosphore (P) : 1 L/ha\",\n  \"- Potassium (K) : 4 kg/ha\"\n];\n\n// 📤 Message complet\nconst message = `📊 *Recommandation intelligente*\n\n🌡️ Temp max : ${tempMax}\n🌡️ Temp min : ${tempMin}\n💨 Vent aujourd’hui : ${vent} km/h\n💧 Pluie aujourd’hui : ${pluie} mm\n🌧️ Pluie demain : ${pluieDemain} mm\n\n🧠 *Analyse météo*\n${meteoConseil.join(\"\\n\")}\n\n📌 *Consignes générales*\n${recommandations.join(\"\\n\")}\n\n📌 *Dosages standards*\n${dosages.join(\"\\n\")}\n`;\n\n// ✅ Retourne le message + chatId pour Telegram\nreturn [\n  {\n    json: {\n      message,\n      chatId\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        304
+      ],
+      "id": "53b7970f-9573-422e-a7b5-260a00d3a398",
+      "name": "Construire prompt IA1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 📦 Afficher les données entrantes\nitems.forEach(item => {\n  console.log(\"📅 Date reçue :\", item.json.date);\n});\n\n// 📅 Calcul de la date d’hier\nconst today = new Date();\ntoday.setDate(today.getDate() - 1);\nconst yesterday = today.toISOString().split('T')[0]; // Format YYYY-MM-DD\n\n// 🔍 Filtrage des données par date\nconst result = items.filter(item => item.json.date === yesterday);\n\nconsole.log(\"FILTRÉ\", result.map(i => i.json));\n\nreturn result;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1056,
+        288
+      ],
+      "id": "f16b9054-3b32-4170-9468-144767467337",
+      "name": "filtrer par date"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1GjjBMRhUky8OBMKjFyvdHJ3EVEgx_I0EyDi_GKz0E2I",
+          "mode": "list",
+          "cachedResultName": "Feuille interventions",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1GjjBMRhUky8OBMKjFyvdHJ3EVEgx_I0EyDi_GKz0E2I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1GjjBMRhUky8OBMKjFyvdHJ3EVEgx_I0EyDi_GKz0E2I/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        672,
+        224
+      ],
+      "id": "68d53ab1-56f3-4b3e-82ff-cee2cec67101",
+      "name": "Feuille interventions1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "cWc9wdKpQ1eU6j8r",
+          "name": "google-agro"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chatId }}",
+        "text": "={{ $json.message }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1536,
+        304
+      ],
+      "id": "23e0534e-5cd3-4e50-b255-7c116ea92243",
+      "name": "envoyer recommandation",
+      "webhookId": "5f6c2b44-d05e-411e-8d0a-ba3568330e28",
+      "credentials": {
+        "telegramApi": {
+          "id": "gHIK7rtT6xc59mR4",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "chat_id",
+              "value": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d07848ad-b6be-4ea9-8a02-f9725f0678f1",
+      "name": "Préparer données2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        -416,
+        224
+      ]
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        464,
+        224
+      ],
+      "id": "a854c614-8667-41a9-8a42-52db8c2fe12d",
+      "name": "Wait",
+      "webhookId": "215c5537-17c6-4ae9-b3eb-43f38bd276c3"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        496,
+        352
+      ],
+      "id": "f113f317-de94-4e90-8748-fc0ea3d8a704",
+      "name": "Wait1",
+      "webhookId": "215c5537-17c6-4ae9-b3eb-43f38bd276c3"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        64,
+        -48
+      ],
+      "id": "78f0a86a-8eda-4061-816f-58f9ff884631",
+      "name": "Wait2",
+      "webhookId": "90c6e4ed-e834-4036-af3e-ca2b50d389d4"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        48,
+        112
+      ],
+      "id": "9de5da3a-efbe-4d0e-9110-9711257b7513",
+      "name": "Wait3",
+      "webhookId": "636d41e2-961d-41ba-99a9-1cbf194c532b"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -832,
+        448
+      ],
+      "id": "9e8209c9-7834-491b-9951-1b22c70239b7",
+      "name": "Wait4",
+      "webhookId": "18f6ecd0-6c37-47b0-a480-07c1a0a2ff3e"
+    },
+    {
+      "parameters": {
+        "amount": 3
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -832,
+        288
+      ],
+      "id": "c9e9366c-68a6-4d64-9168-9bcc569a1e37",
+      "name": "Wait5",
+      "webhookId": "7463d879-42c4-4449-b4cf-edf3c42aee46"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Confirmation Bot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Préparer données": {
+      "main": [
+        [
+          {
+            "node": "envoyer recommandation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmation Bot": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Envoyer météo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Wait3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Préparer données2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait5",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fusion données rapport": {
+      "main": [
+        [
+          {
+            "node": "fitrer par date",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "envoyer rapport",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Feuille interventions": {
+      "main": [
+        [
+          {
+            "node": "Fusion données rapport",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fitrer par date": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Feuille pulverisations": {
+      "main": [
+        [
+          {
+            "node": "Fusion données rapport",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Fusion données rapport1": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Fusion données rapport1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Feuille pulverisations1": {
+      "main": [
+        [
+          {
+            "node": "Fusion données rapport2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Fusion données rapport2": {
+      "main": [
+        [
+          {
+            "node": "filtrer par date",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Construire prompt IA1": {
+      "main": [
+        [
+          {
+            "node": "Préparer données",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "filtrer par date": {
+      "main": [
+        [
+          {
+            "node": "Construire prompt IA1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Feuille interventions1": {
+      "main": [
+        [
+          {
+            "node": "Fusion données rapport2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Préparer données2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Feuille interventions1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Feuille pulverisations1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait2": {
+      "main": [
+        [
+          {
+            "node": "Feuille interventions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait3": {
+      "main": [
+        [
+          {
+            "node": "Feuille pulverisations",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait4": {
+      "main": [
+        [
+          {
+            "node": "Message Fallback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait5": {
+      "main": [
+        [
+          {
+            "node": "Message Aide",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1a741438-904f-416c-9a7d-0cc831da823e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "87220c082f3d486805fbe0c0006d19e845635fc2cc7473d86ff78720ae216598"
+  },
+  "id": "8q5sxEIeQ0IZ3j8r",
+  "tags": []
+}
