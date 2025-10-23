@@ -18,6 +18,13 @@ Il combine la puissance de **n8n**, **Telegram**, **Google Sheets** et **OpenWea
 🎯 Objectif : rendre l’agriculture plus **connectée, prévisible et productive** grâce à l’automatisation et à l’IA.
 
 ![Aperçu du workflow n8n](docs/workflowfinal.png)
+---
+
+## 🕓 Historique des versions
+
+Consultez le fichier [CHANGELOG.md](./CHANGELOG.md) pour suivre toutes les mises à jour, correctifs et nouvelles fonctionnalités du projet.
+
+> Dernière version publiée : **v2.0.0** 🚀
 
 ---
 
